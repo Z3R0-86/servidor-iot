@@ -1,0 +1,225 @@
+* {
+  box-sizing: border-box;
+}
+
+:root {
+  --bg: #020438;
+  --card: #0a0d5c;
+  --card-edge: #1c2392;
+  --bar-bg: #1a1f7a;
+  --text: #ffffff;
+  --water-front: #4d6de3;
+  --water-back: #97b7ff;
+  --pot: #4f2b16;
+  --pot-rim: #6a381d;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  color: var(--text);
+  text-align: center;
+  background:
+    radial-gradient(circle at 18% 22%, #2432ad 0%, transparent 30%),
+    radial-gradient(circle at 82% 8%, #1b4d92 0%, transparent 38%),
+    linear-gradient(180deg, #020438 0%, #05084f 45%, #09107f 100%);
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+}
+
+h1 {
+  margin: 22px 0 6px;
+  letter-spacing: 0.3px;
+}
+
+.container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 25px;
+  padding: 20px;
+  max-width: 1000px;
+  margin: auto;
+}
+
+.card {
+  background: linear-gradient(180deg, #0a0d5c 0%, #0a1171 100%);
+  border: 1px solid var(--card-edge);
+  padding: 25px;
+  border-radius: 20px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.35);
+  transition: transform 0.3s ease;
+}
+
+.card:hover {
+  transform: translateY(-5px);
+}
+
+.value {
+  font-size: 1.8rem;
+  margin-top: 10px;
+}
+
+.bar-container {
+  height: 160px;
+  width: 60px;
+  margin: 15px auto;
+  background: var(--bar-bg);
+  border-radius: 20px;
+  overflow: hidden;
+  display: flex;
+  align-items: flex-end;
+}
+
+.bar {
+  width: 100%;
+  height: 0%;
+  transition: height 0.5s ease, background 0.35s ease;
+}
+
+.soil-widget {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  margin-top: 8px;
+}
+
+.plant {
+  width: 180px;
+  height: 95px;
+  position: relative;
+}
+
+.stem {
+  width: 12px;
+  height: 30px;
+  border-radius: 10px;
+  position: absolute;
+  left: 50%;
+  bottom: 0;
+  transform: translateX(-50%);
+  background: linear-gradient(180deg, #90e296 0%, #4bb04f 100%);
+  transition: height 4s ease, background 4s ease;
+}
+
+.leaf {
+  position: absolute;
+  width: 56px;
+  height: 30px;
+  background: #77d98a;
+  top: 24px;
+  border-radius: 100% 0 100% 0;
+  opacity: 0.7;
+  transition: transform 4s ease, opacity 4s ease, background 4s ease;
+}
+
+.leaf-left {
+  left: 42px;
+  transform: rotate(-35deg) scale(0.55);
+}
+
+.leaf-right {
+  right: 42px;
+  transform: rotate(145deg) scale(0.55);
+}
+
+.pot-box {
+  width: 190px;
+  height: 170px;
+  border-radius: 26px 26px 40px 40px;
+  position: relative;
+  overflow: hidden;
+  border: 3px solid rgba(255, 255, 255, 0.2);
+  box-shadow: inset 0 6px 0 rgba(255, 255, 255, 0.1);
+  background: linear-gradient(180deg, var(--pot-rim) 0 14%, var(--pot) 14% 100%);
+}
+
+.percent {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  pointer-events: none;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+}
+
+.percentNum {
+  font-size: 54px;
+  line-height: 1;
+}
+
+.percentB {
+  font-size: 28px;
+  margin-top: 8px;
+  margin-left: 2px;
+}
+
+.water {
+  position: absolute;
+  left: 0;
+  top: 0;
+  z-index: 2;
+  width: 100%;
+  height: 100%;
+  transform: translate(0, 100%);
+  background: var(--water-front);
+  transition: transform 4s ease, background 4s ease;
+}
+
+.water_wave {
+  width: 200%;
+  position: absolute;
+  bottom: calc(100% - 1px);
+}
+
+.water_wave_back {
+  right: 0;
+  fill: var(--water-back);
+  animation: wave-back 1.4s infinite linear;
+}
+
+.water_wave_front {
+  left: 0;
+  fill: var(--water-front);
+  margin-bottom: -1px;
+  animation: wave-front 0.7s infinite linear;
+}
+
+#fecha {
+  margin: 16px 20px 24px;
+  opacity: 0.88;
+}
+
+@keyframes wave-front {
+  100% {
+    transform: translate(-50%, 0);
+  }
+}
+
+@keyframes wave-back {
+  100% {
+    transform: translate(50%, 0);
+  }
+}
+
+@media (max-width: 640px) {
+  .container {
+    gap: 16px;
+    padding: 14px;
+  }
+
+  .card {
+    padding: 20px;
+  }
+
+  .pot-box {
+    width: 170px;
+    height: 152px;
+  }
+
+  .percentNum {
+    font-size: 46px;
+  }
+}
