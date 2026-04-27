@@ -89,9 +89,19 @@ async function cargarDatos() {
       humBar.style.background = "#00c853";
     }
 
+    const sueloValor = Number(d.suelo);
     const seco = 3200;
     const humedo = 1500;
-    const porcentaje = clamp(map(d.suelo, seco, humedo, 0, 100), 0, 100);
+
+    // Si ya llega en porcentaje (0-100), se usa directo.
+    // Si llega en ADC crudo, se convierte con calibracion.
+    const porcentaje = clamp(
+      sueloValor <= 100
+        ? sueloValor
+        : map(sueloValor, seco, humedo, 0, 100),
+      0,
+      100
+    );
 
     document.getElementById("sueloPorcentaje").innerText = porcentaje;
 
