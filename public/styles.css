@@ -3,89 +3,160 @@
 }
 
 :root {
-  --bg: #020438;
-  --card: #0a0d5c;
-  --card-edge: #1c2392;
-  --bar-bg: #1a1f7a;
-  --text: #ffffff;
+  --bg-1: #0a1e85;
+  --bg-2: #08196f;
+  --bg-3: #060f4a;
+  --card-blue: #223ca7;
+  --card-blue-2: #1c2f87;
+  --card-soil: #624a7a;
+  --card-soil-2: #553564;
+  --border: rgba(255, 255, 255, 0.08);
+  --text: #f5f7ff;
+  --muted: rgba(255, 255, 255, 0.72);
+  --track: rgba(18, 38, 126, 0.82);
+  --temp-fill: #4fa1ff;
+  --hum-fill: #2ac8df;
+  --soil-fill: #2fdb78;
   --water-front: #4d6de3;
   --water-back: #97b7ff;
-  --pot: #4f2b16;
-  --pot-rim: #6a381d;
+  --pot: #5a3320;
+  --pot-rim: #6f3d22;
 }
 
 body {
   margin: 0;
   min-height: 100vh;
+  overflow-x: hidden;
   color: var(--text);
-  text-align: center;
   background:
-    radial-gradient(circle at 18% 22%, #2432ad 0%, transparent 30%),
-    radial-gradient(circle at 82% 8%, #1b4d92 0%, transparent 38%),
-    linear-gradient(180deg, #020438 0%, #05084f 45%, #09107f 100%);
+    radial-gradient(circle at 16% 16%, rgba(45, 77, 205, 0.78) 0, rgba(45, 77, 205, 0) 30%),
+    radial-gradient(circle at 86% 8%, rgba(26, 84, 165, 0.52) 0, rgba(26, 84, 165, 0) 35%),
+    linear-gradient(180deg, var(--bg-1) 0%, var(--bg-2) 45%, var(--bg-3) 100%);
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
 }
 
-h1 {
-  margin: 22px 0 6px;
-  letter-spacing: 0.3px;
+.page-shell {
+  width: min(1160px, calc(100% - 16px));
+  margin: 0 auto;
+  padding: 12px 0 24px;
 }
 
-.container {
+h1 {
+  margin: 0 0 16px;
+  text-align: left;
+  font-size: clamp(2rem, 3vw, 2.9rem);
+  line-height: 1.1;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.section-top h2,
+.history-card h2 {
+  margin: 0 0 14px;
+  text-align: left;
+  font-size: 1.15rem;
+  font-weight: 700;
+}
+
+.metrics-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  gap: 25px;
-  padding: 20px;
-  max-width: 1000px;
-  margin: auto;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  gap: 18px;
 }
 
 .card {
-  background: linear-gradient(180deg, #0a0d5c 0%, #0a1171 100%);
-  border: 1px solid var(--card-edge);
-  padding: 25px;
-  border-radius: 20px;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.35);
-  transition: transform 0.3s ease;
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  box-shadow: 0 14px 32px rgba(0, 0, 0, 0.22);
 }
 
-.card:hover {
-  transform: translateY(-5px);
+.metric-card {
+  grid-column: span 4;
+  min-height: 165px;
+  padding: 18px 18px 16px;
 }
 
-.value {
-  font-size: 1.8rem;
-  margin-top: 10px;
+.metric-temperature {
+  background: linear-gradient(180deg, var(--card-blue) 0%, var(--card-blue-2) 100%);
 }
 
-.bar-container {
-  height: 160px;
-  width: 60px;
-  margin: 15px auto;
-  background: var(--bar-bg);
-  border-radius: 20px;
-  overflow: hidden;
-  display: flex;
-  align-items: flex-end;
+.metric-humidity {
+  background: linear-gradient(180deg, #2340aa 0%, #1c3286 100%);
 }
 
-.bar {
+.metric-soil {
+  background: linear-gradient(180deg, var(--card-soil) 0%, var(--card-soil-2) 100%);
+}
+
+.metric-header {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 14px;
+}
+
+.metric-icon {
+  font-size: 1rem;
+}
+
+.soil-icon {
+  color: #91ef9f;
+}
+
+.metric-label {
+  color: var(--muted);
+  font-weight: 700;
+  font-size: 0.92rem;
+}
+
+.soil-label {
+  color: #e9f8a8;
+}
+
+.metric-value {
+  font-size: clamp(2rem, 4vw, 2.75rem);
+  font-weight: 400;
+  line-height: 1;
+  letter-spacing: -0.03em;
+  margin-bottom: 14px;
+}
+
+.progress-track {
   width: 100%;
-  height: 0%;
-  transition: height 0.5s ease, background 0.35s ease;
+  height: 10px;
+  border-radius: 999px;
+  background: var(--track);
+  overflow: hidden;
+}
+
+.progress-fill {
+  width: 0%;
+  height: 100%;
+  border-radius: inherit;
+  transition: width 0.45s ease, background 0.25s ease;
+}
+
+.temp-fill {
+  background: var(--temp-fill);
+}
+
+.hum-fill {
+  background: var(--hum-fill);
 }
 
 .soil-widget {
   display: flex;
-  flex-direction: column;
+  flex-wrap: wrap;
   align-items: center;
-  gap: 10px;
-  margin-top: 8px;
+  justify-content: center;
+  gap: 12px 14px;
+  margin-top: -2px;
 }
 
 .plant {
-  width: 180px;
-  height: 95px;
+  width: clamp(138px, 33vw, 180px);
+  height: clamp(82px, 18vw, 90px);
   position: relative;
 }
 
@@ -105,7 +176,7 @@ h1 {
   position: absolute;
   width: 56px;
   height: 30px;
-  background: #77d98a;
+  background: #7ee196;
   top: 24px;
   border-radius: 100% 0 100% 0;
   opacity: 0.7;
@@ -123,8 +194,8 @@ h1 {
 }
 
 .pot-box {
-  width: 190px;
-  height: 170px;
+  width: clamp(164px, 35vw, 190px);
+  height: clamp(150px, 34vw, 170px);
   border-radius: 26px 26px 40px 40px;
   position: relative;
   overflow: hidden;
@@ -187,9 +258,160 @@ h1 {
   animation: wave-front 0.7s infinite linear;
 }
 
+.section-history {
+  margin-top: 28px;
+}
+
+.history-card {
+  padding: 20px 18px 18px;
+  background: linear-gradient(180deg, #1e3083 0%, #1c2d73 100%);
+}
+
+.tabs {
+  display: inline-flex;
+  gap: 0;
+  border-radius: 8px;
+  overflow: hidden;
+  background: #2a376b;
+  margin-bottom: 14px;
+}
+
+.tab {
+  border: 0;
+  padding: 12px 22px;
+  background: transparent;
+  color: rgba(255, 255, 255, 0.55);
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.tab.active {
+  background: #1f6fff;
+  color: #fff;
+}
+
+.chart-shell {
+  display: grid;
+  grid-template-columns: 42px 1fr;
+  gap: 0;
+  align-items: stretch;
+  min-height: 355px;
+}
+
+.chart-axis {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: flex-end;
+  padding: 0 6px 30px 0;
+  color: rgba(255, 255, 255, 0.48);
+  font-size: 0.85rem;
+}
+
+.chart-area {
+  position: relative;
+  min-height: 355px;
+  min-width: 0;
+  padding: 12px 8px 10px 4px;
+  border-left: 1px solid rgba(255, 255, 255, 0.1);
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  background:
+    repeating-linear-gradient(
+      to bottom,
+      transparent 0,
+      transparent calc(20% - 1px),
+      rgba(255, 255, 255, 0.08) calc(20% - 1px),
+      rgba(255, 255, 255, 0.08) 20%
+    ),
+    repeating-linear-gradient(
+      to right,
+      rgba(255, 255, 255, 0.06) 0,
+      rgba(255, 255, 255, 0.06) 1px,
+      transparent 1px,
+      transparent 5%
+    );
+}
+
+.chart-columns {
+  position: absolute;
+  inset: 14px 6px 0 6px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(28px, 1fr));
+  align-items: end;
+  gap: 6px;
+}
+
+.chart-column {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+  height: 100%;
+}
+
+.chart-bars {
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  gap: 6px;
+  width: 100%;
+  height: 100%;
+}
+
+.chart-bar {
+  width: 7px;
+  min-width: 7px;
+  border-radius: 999px 999px 0 0;
+  opacity: 0.95;
+}
+
+.chart-time {
+  color: rgba(255, 255, 255, 0.58);
+  font-size: 0.72rem;
+  line-height: 1;
+}
+
+.chart-legend {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-top: 12px;
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 0.85rem;
+}
+
+.chart-legend span {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.legend-dot {
+  width: 11px;
+  height: 11px;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.temp-dot {
+  background: #4f8dff;
+}
+
+.hum-dot {
+  background: #19d0e0;
+}
+
+.soil-dot {
+  background: #30e68f;
+}
+
 #fecha {
-  margin: 16px 20px 24px;
-  opacity: 0.88;
+  margin: 14px 0 0;
+  color: rgba(255, 255, 255, 0.78);
+  font-size: 0.92rem;
 }
 
 @keyframes wave-front {
@@ -204,22 +426,114 @@ h1 {
   }
 }
 
-@media (max-width: 640px) {
-  .container {
-    gap: 16px;
-    padding: 14px;
+@media (max-width: 980px) {
+  .metric-card {
+    grid-column: span 6;
   }
 
-  .card {
-    padding: 20px;
+  .metric-soil {
+    grid-column: 1 / -1;
+  }
+
+  .chart-columns {
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 640px) {
+  .page-shell {
+    width: min(100% - 12px, 1160px);
+    padding-top: 10px;
+  }
+
+  h1 {
+    margin-bottom: 12px;
+    font-size: 1.65rem;
+  }
+
+  .section-top h2,
+  .history-card h2 {
+    font-size: 1.08rem;
+    margin-bottom: 12px;
+  }
+
+  .metrics-grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  .metric-card,
+  .metric-soil {
+    grid-column: auto;
+  }
+
+  .metric-card {
+    min-height: 132px;
+    padding: 16px 16px 14px;
+  }
+
+  .metric-soil {
+    min-height: auto;
+  }
+
+  .metric-value {
+    font-size: 2rem;
+    margin-bottom: 12px;
+  }
+
+  .soil-widget {
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .plant {
+    width: clamp(132px, 55vw, 150px);
+    height: clamp(74px, 24vw, 82px);
   }
 
   .pot-box {
-    width: 170px;
-    height: 152px;
+    width: clamp(152px, 58vw, 168px);
+    height: clamp(140px, 54vw, 150px);
   }
 
   .percentNum {
     font-size: 46px;
+  }
+
+  .tabs {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    width: 100%;
+  }
+
+  .tab {
+    padding: 12px 8px;
+  }
+
+  .chart-shell {
+    grid-template-columns: 32px 1fr;
+    min-height: 300px;
+  }
+
+  .chart-axis {
+    padding-right: 4px;
+    font-size: 0.72rem;
+  }
+
+  .chart-area {
+    min-height: 300px;
+    padding-right: 4px;
+  }
+
+  .chart-columns {
+    inset: 12px 4px 0 4px;
+    grid-template-columns: repeat(auto-fit, minmax(24px, 1fr));
+    gap: 4px;
+  }
+
+  .chart-bar {
+    width: 5px;
+    min-width: 5px;
   }
 }

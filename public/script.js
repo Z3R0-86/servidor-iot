@@ -6,6 +6,20 @@ function clamp(value, min, max) {
   return Math.max(min, Math.min(max, value));
 }
 
+function normalizeSoil(value) {
+  const soilValue = Number(value);
+
+  if (!Number.isFinite(soilValue)) {
+    return 0;
+  }
+
+  if (soilValue <= 100) {
+    return clamp(soilValue, 0, 100);
+  }
+
+  return clamp(map(soilValue, 3200, 1500, 0, 100), 0, 100);
+}
+
 function setSoilPalette(porcentaje) {
   const potBox = document.getElementById("potBox");
   const stem = document.getElementById("stem");
@@ -15,7 +29,7 @@ function setSoilPalette(porcentaje) {
   let waterFront = "#4d6de3";
   let waterBack = "#97b7ff";
   let stemBg = "linear-gradient(180deg, #90e296 0%, #4bb04f 100%)";
-  let leafColor = "#77d98a";
+  let leafColor = "#7ee196";
 
   if (porcentaje < 30) {
     waterFront = "#de5959";
@@ -52,57 +66,120 @@ function animatePlant(porcentaje) {
   leafRight.style.opacity = leafOpacity;
 }
 
+function getRangeSlice(data, range) {
+  if (range === "mensual") {
+    return data.slice(-30);
+  }
+
+  if (range === "semanal") {
+    return data.slice(-7);
+  }
+
+  return data.slice(-24);
+}
+
+function formatHourLabel(fecha) {
+  return new Date(fecha).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+}
+
+function buildHistoryChart(data, range = "diario") {
+  const chart = document.getElementById("historyChart");
+
+  if (!chart) {
+    return;
+  }
+
+  const items = getRangeSlice(data, range);
+
+  if (!items.length) {
+    chart.innerHTML = "";
+    return;
+  }
+
+  chart.innerHTML = `
+    <div class="chart-columns">
+      ${items.map((item) => {
+        const temp = clamp(Number(item.temperatura) || 0, 0, 50);
+        const hum = clamp(Number(item.humedad) || 0, 0, 100);
+        const soil = normalizeSoil(item.suelo);
+        const timeLabel = formatHourLabel(item.fecha || Date.now());
+
+        return `
+          <div class="chart-column">
+            <div class="chart-bars">
+              <div class="chart-bar" title="Temperatura ${temp}°C" style="height:${Math.max(10, (temp / 50) * 100)}%; background:#4f8dff"></div>
+              <div class="chart-bar" title="Humedad ${hum}%" style="height:${Math.max(10, hum)}%; background:#19d0e0"></div>
+              <div class="chart-bar" title="Suelo ${soil}%" style="height:${Math.max(10, soil)}%; background:#30e68f"></div>
+            </div>
+            <div class="chart-time">${timeLabel}</div>
+          </div>
+        `;
+      }).join("")}
+    </div>
+  `;
+}
+
+let currentHistoryRange = "diario";
+let currentHistoryData = [];
+
+function wireTabs() {
+  const tabs = document.querySelectorAll(".tab[data-range]");
+
+  tabs.forEach((tab) => {
+    tab.addEventListener("click", () => {
+      currentHistoryRange = tab.dataset.range;
+
+      tabs.forEach((button) => {
+        const active = button === tab;
+        button.classList.toggle("active", active);
+        button.setAttribute("aria-selected", String(active));
+      });
+
+      buildHistoryChart(currentHistoryData, currentHistoryRange);
+    });
+  });
+}
+
 async function cargarDatos() {
   try {
     const res = await fetch("/api/datos");
     const data = await res.json();
+    currentHistoryData = Array.isArray(data) ? data : [];
+
+    buildHistoryChart(currentHistoryData, currentHistoryRange);
 
     if (!Array.isArray(data) || data.length === 0) {
+      document.getElementById("fecha").innerText = "Sin lecturas todavía";
       return;
     }
 
     const d = data[data.length - 1];
 
     document.getElementById("temp").innerText = `${d.temperatura} °C`;
-    let tempPorcentaje = clamp(map(d.temperatura, 0, 50, 0, 100), 0, 100);
-    const tempBar = document.getElementById("tempBar");
-    tempBar.style.height = `${tempPorcentaje}%`;
+    const tempPorcentaje = clamp(map(Number(d.temperatura) || 0, 0, 50, 0, 100), 0, 100);
+    document.getElementById("tempBar").style.width = `${tempPorcentaje}%`;
 
-    if (d.temperatura < 20) {
-      tempBar.style.background = "#00bcd4";
-    } else if (d.temperatura < 30) {
-      tempBar.style.background = "#ffc107";
+    if (Number(d.temperatura) < 20) {
+      document.getElementById("tempBar").style.background = "#4fa1ff";
+    } else if (Number(d.temperatura) < 30) {
+      document.getElementById("tempBar").style.background = "#ffd24a";
     } else {
-      tempBar.style.background = "#f44336";
+      document.getElementById("tempBar").style.background = "#f66a6a";
     }
 
     document.getElementById("hum").innerText = `${d.humedad} %`;
-    const humBar = document.getElementById("humBar");
     const humPorcentaje = clamp(Number(d.humedad), 0, 100);
-    humBar.style.height = `${humPorcentaje}%`;
+    document.getElementById("humBar").style.width = `${humPorcentaje}%`;
 
     if (humPorcentaje < 30) {
-      humBar.style.background = "#ff4d4d";
+      document.getElementById("humBar").style.background = "#ff4d4d";
     } else if (humPorcentaje < 70) {
-      humBar.style.background = "#ffa500";
+      document.getElementById("humBar").style.background = "#ffa500";
     } else {
-      humBar.style.background = "#00c853";
+      document.getElementById("humBar").style.background = "#2fdb78";
     }
 
-    const sueloValor = Number(d.suelo);
-    const seco = 3200;
-    const humedo = 1500;
-
-    // Si ya llega en porcentaje (0-100), se usa directo.
-    // Si llega en ADC crudo, se convierte con calibracion.
-    const porcentaje = clamp(
-      sueloValor <= 100
-        ? sueloValor
-        : map(sueloValor, seco, humedo, 0, 100),
-      0,
-      100
-    );
-
+    const porcentaje = normalizeSoil(d.suelo);
     document.getElementById("sueloPorcentaje").innerText = porcentaje;
 
     const water = document.getElementById("water");
@@ -111,12 +188,12 @@ async function cargarDatos() {
     setSoilPalette(porcentaje);
     animatePlant(porcentaje);
 
-    document.getElementById("fecha").innerText =
-      `Última actualización: ${new Date(d.fecha).toLocaleString()}`;
+    document.getElementById("fecha").innerText = `Última actualización: ${new Date(d.fecha).toLocaleString()}`;
   } catch (error) {
     console.error("No se pudieron cargar datos:", error);
   }
 }
 
+wireTabs();
 setInterval(cargarDatos, 2000);
 cargarDatos();
