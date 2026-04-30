@@ -1,4 +1,5 @@
 const express = require("express");
+const path = require("path");
 const { createClient } = require("@supabase/supabase-js");
 const app = express();
 
@@ -100,7 +101,7 @@ app.get("/api/datos", async (req, res) => {
 });
 
 app.get("/", (req, res) => {
-    res.send("Servidor IoT funcionando");
+    res.sendFile(path.join(__dirname, "public", "index.html"));
 });
 
 app.listen(3000, () => {
