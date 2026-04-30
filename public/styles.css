@@ -292,85 +292,52 @@ h1 {
 }
 
 .chart-shell {
-  display: grid;
-  grid-template-columns: 42px 1fr;
-  gap: 0;
-  align-items: stretch;
-  min-height: 355px;
-}
-
-.chart-axis {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  align-items: flex-end;
-  padding: 0 6px 30px 0;
-  color: rgba(255, 255, 255, 0.48);
-  font-size: 0.85rem;
+  display: block;
+  min-height: 1050px;
+  margin-bottom: 14px;
 }
 
 .chart-area {
   position: relative;
-  min-height: 355px;
-  min-width: 0;
-  padding: 12px 8px 10px 4px;
-  border-left: 1px solid rgba(255, 255, 255, 0.1);
-  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  min-height: 1050px;
+  padding: 24px 16px 16px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
   background:
     repeating-linear-gradient(
       to bottom,
       transparent 0,
       transparent calc(20% - 1px),
-      rgba(255, 255, 255, 0.08) calc(20% - 1px),
-      rgba(255, 255, 255, 0.08) 20%
+      rgba(255, 255, 255, 0.04) calc(20% - 1px),
+      rgba(255, 255, 255, 0.04) 20%
     ),
-    repeating-linear-gradient(
-      to right,
-      rgba(255, 255, 255, 0.06) 0,
-      rgba(255, 255, 255, 0.06) 1px,
-      transparent 1px,
-      transparent 5%
-    );
+    radial-gradient(circle at 20% 50%, rgba(79, 161, 255, 0.08) 0%, transparent 50%),
+    radial-gradient(circle at 80% 60%, rgba(42, 200, 223, 0.06) 0%, transparent 50%);
 }
 
-.chart-columns {
-  position: absolute;
-  inset: 14px 6px 0 6px;
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(28px, 1fr));
-  align-items: end;
-  gap: 6px;
+.chart-empty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 1.1rem;
 }
 
-.chart-column {
+.chart-canvas-container {
   display: flex;
   flex-direction: column;
-  align-items: center;
-  justify-content: flex-end;
-  gap: 8px;
-  height: 100%;
-}
-
-.chart-bars {
-  display: flex;
-  align-items: flex-end;
-  justify-content: center;
-  gap: 6px;
+  gap: 36px;
   width: 100%;
-  height: 100%;
 }
 
-.chart-bar {
-  width: 7px;
-  min-width: 7px;
-  border-radius: 999px 999px 0 0;
-  opacity: 0.95;
-}
-
-.chart-time {
-  color: rgba(255, 255, 255, 0.58);
-  font-size: 0.72rem;
-  line-height: 1;
+.metric-canvas {
+  width: 100%;
+  height: auto;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  display: block;
 }
 
 .chart-legend {
@@ -435,8 +402,18 @@ h1 {
     grid-column: 1 / -1;
   }
 
-  .chart-columns {
-    grid-template-columns: repeat(12, minmax(0, 1fr));
+  .chart-shell {
+    min-height: 800px;
+  }
+
+  .chart-area {
+    min-height: 800px;
+    padding: 16px 8px 8px;
+    border-radius: 10px;
+  }
+
+  .chart-canvas-container {
+    gap: 28px;
   }
 }
 
@@ -498,7 +475,11 @@ h1 {
   }
 
   .percentNum {
-    font-size: 46px;
+    font-size: 42px;
+  }
+
+  .percentB {
+    font-size: 20px;
   }
 
   .tabs {
@@ -508,32 +489,36 @@ h1 {
   }
 
   .tab {
-    padding: 12px 8px;
+    padding: 10px 8px;
+    font-size: 0.9rem;
   }
 
   .chart-shell {
-    grid-template-columns: 32px 1fr;
-    min-height: 300px;
-  }
-
-  .chart-axis {
-    padding-right: 4px;
-    font-size: 0.72rem;
+    min-height: 700px;
   }
 
   .chart-area {
-    min-height: 300px;
-    padding-right: 4px;
+    min-height: 700px;
+    padding: 16px 8px 8px;
+    border-radius: 10px;
   }
 
-  .chart-columns {
-    inset: 12px 4px 0 4px;
-    grid-template-columns: repeat(auto-fit, minmax(24px, 1fr));
-    gap: 4px;
+  .chart-canvas-container {
+    gap: 20px;
   }
 
-  .chart-bar {
-    width: 5px;
-    min-width: 5px;
+  .metric-canvas {
+    height: auto;
+  }
+
+  .chart-legend {
+    gap: 6px;
+    margin-top: 10px;
+    font-size: 0.75rem;
+  }
+
+  #fecha {
+    margin: 12px 0 0;
+    font-size: 0.82rem;
   }
 }
